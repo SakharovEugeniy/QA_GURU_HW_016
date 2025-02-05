@@ -16,12 +16,10 @@ public class SingleUserTest extends BaseTest{
     void statusCode200Test() {
 
         given()
-                .baseUri(reqresUri)
-                .basePath("/api/users/2")
                 .contentType(JSON)
                 .log().uri()
                 .when()
-                .get()
+                .get("/users/2")
                 .then()
                 .log().status()
                 .log().body()
@@ -36,12 +34,10 @@ public class SingleUserTest extends BaseTest{
     void dataIDTest() {
 
         given()
-                .baseUri(reqresUri)
-                .basePath("/api/users/2222")
                 .contentType(JSON)
                 .log().uri()
                 .when()
-                .get()
+                .get("/users/222")
                 .then()
                 .log().status()
                 .statusCode(404);
@@ -52,12 +48,10 @@ public class SingleUserTest extends BaseTest{
     void dataAvatarSuffixEqualIdTest() {
 
         given()
-                .baseUri(reqresUri)
-                .basePath("/api/users/2")
                 .contentType(JSON)
                 .log().uri()
                 .when()
-                .get()
+                .get("/users/2")
                 .then()
                 .log().status()
                 .log().body()

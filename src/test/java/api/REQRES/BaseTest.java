@@ -1,6 +1,13 @@
 package api.REQRES;
 
+import io.restassured.RestAssured;
+import org.junit.jupiter.api.BeforeAll;
+
 public class BaseTest {
 
-    protected String reqresUri = "https://reqres.in";
+    @BeforeAll
+    public static void setUp() {
+        RestAssured.baseURI = "https://reqres.in";
+        RestAssured.basePath = "/api";
+    }
 }

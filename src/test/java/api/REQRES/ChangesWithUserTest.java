@@ -7,19 +7,17 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.equalTo;
 
-public class CreateAndUpdateUserTest extends BaseTest {
+public class ChangesWithUserTest extends BaseTest {
 
     @Test
     @DisplayName("Проверка создания пользователя")
     void createUserTest() {
         given()
-                .baseUri(reqresUri)
-                .basePath("/api/users")
                 .body("{\"name\": \"morpheus\", \"job\": \"leader\"}")
                 .contentType(JSON)
                 .log().uri()
                 .when()
-                .post()
+                .post("/users")
                 .then()
                 .log().status()
                 .log().body()
@@ -32,13 +30,11 @@ public class CreateAndUpdateUserTest extends BaseTest {
     @DisplayName("Проверка возможности создания пользователя с пустыми полями")
     void createEmptyUserTest() {
         given()
-                .baseUri(reqresUri)
-                .basePath("/api/users")
                 .body("{\"name\": \"\", \"job\": \"\"}")
                 .contentType(JSON)
                 .log().uri()
                 .when()
-                .post()
+                .post("/users")
                 .then()
                 .log().status()
                 .log().body()
@@ -51,18 +47,30 @@ public class CreateAndUpdateUserTest extends BaseTest {
     @DisplayName("Проверка изменения поля job у существующего пользователя")
     void updateUserTest() {
         given()
-                .baseUri(reqresUri)
-                .basePath("/api/users/2")
                 .body("{\"name\": \"morpheus\", \"job\": \"zion resident\"}")
                 .contentType(JSON)
                 .log().uri()
                 .when()
-                .put()
+                .put("/users/2")
                 .then()
                 .log().status()
                 .log().body()
                 .statusCode(200)
                 .body("name", equalTo("morpheus"))
                 .body("job", equalTo("zion resident"));
+    }
+
+    @Test
+    @DisplayName("Проверка удаления существующего пользователя")
+    void deleteUserTest() {
+        given()
+                .contentType(JSON)
+                .log().uri()
+                .when()
+                .delete("/users/2")
+                .then()
+                .log().status()
+                .log().body()
+                .statusCode(204);
     }
 }
