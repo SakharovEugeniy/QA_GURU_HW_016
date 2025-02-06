@@ -1,8 +1,12 @@
 package api.REQRES;
 
+import io.qameta.allure.restassured.AllureRestAssured;
+import models.singleUser.ResponseSingleUserBody;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static helpers.CustomAllureListener.withCustomTemplates;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.containsString;
@@ -15,18 +19,22 @@ public class SingleUserTest extends BaseTest{
     @DisplayName("Проверка пользователя с id = 2")
     void statusCode200Test() {
 
-        given()
+        ResponseSingleUserBody responseBody=given()
+                .filter(withCustomTemplates())
                 .contentType(JSON)
                 .log().uri()
+                .log().headers()
                 .when()
                 .get("/users/2")
                 .then()
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("data.id", equalTo(2))
-                .body("data.first_name", equalTo("Janet"))
-                .body("data.last_name", equalTo("Weaver"));
+                .extract().as(ResponseSingleUserBody.class);
+
+        Assertions.assertEquals(2, responseBody.getData().getId());
+        Assertions.assertEquals("Janet", responseBody.getData().getFirstName());
+        Assertions.assertEquals("Weaver", responseBody.getData().getLastName());
     }
 
     @Test
@@ -34,8 +42,10 @@ public class SingleUserTest extends BaseTest{
     void dataIDTest() {
 
         given()
+                .filter(withCustomTemplates())
                 .contentType(JSON)
                 .log().uri()
+                .log().headers()
                 .when()
                 .get("/users/222")
                 .then()
@@ -47,15 +57,19 @@ public class SingleUserTest extends BaseTest{
     @DisplayName("Проверка соответствия номера в суфиксе в имени поля avatar со значением поля id")
     void dataAvatarSuffixEqualIdTest() {
 
-        given()
+        ResponseSingleUserBody responseBody=given()
+                .filter(withCustomTemplates())
                 .contentType(JSON)
                 .log().uri()
+                .log().headers()
                 .when()
                 .get("/users/2")
                 .then()
                 .log().status()
                 .log().body()
-                .body("data.id", equalTo(2))
-                .body("data.avatar", containsString("2"));
+                .extract().as(ResponseSingleUserBody.class);
+
+        Assertions.assertEquals(2, responseBody.getData().getId());
+        Assertions.assertTrue(responseBody.getData().getAvatar().contains("2"));
     }
 }
