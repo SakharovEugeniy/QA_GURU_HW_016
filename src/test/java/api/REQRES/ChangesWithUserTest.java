@@ -1,6 +1,5 @@
 package api.REQRES;
 
-import io.qameta.allure.restassured.AllureRestAssured;
 import models.changesWithUser.RequestChangesBody;
 import models.changesWithUser.ResponseCreateBody;
 import models.changesWithUser.ResponseUpdateBody;
@@ -9,10 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static helpers.CustomAllureListener.withCustomTemplates;
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
-import static io.restassured.http.ContentType.JSON;
 import static specs.ChangesWithUserSpec.*;
 
 
@@ -21,8 +18,8 @@ public class ChangesWithUserTest extends BaseTest {
 
     RequestChangesBody requestBody = new RequestChangesBody();
 
-    @Test
     @Tag("smoke_test")
+    @Test
     @DisplayName("Проверка создания пользователя")
     void createUserTest() {
         requestBody.setName("morpheus");
@@ -30,17 +27,17 @@ public class ChangesWithUserTest extends BaseTest {
 
         ResponseCreateBody responseBody = step("make request", () ->
                 given()
-                .spec(changesUserBodyRequestSpec)
-                .body(requestBody)
-                .when()
-                .post("/users")
-                .then()
-                .spec(changesUserResponse201Spec)
-                .extract().as(ResponseCreateBody.class));
+                        .spec(changesUserBodyRequestSpec)
+                        .body(requestBody)
+                        .when()
+                        .post("/users")
+                        .then()
+                        .spec(changesUserResponse201Spec)
+                        .extract().as(ResponseCreateBody.class));
 
         step("check response", () -> {
-        Assertions.assertEquals("morpheus", responseBody.getName());
-        Assertions.assertEquals("leader", responseBody.getJob());
+            Assertions.assertEquals("morpheus", responseBody.getName());
+            Assertions.assertEquals("leader", responseBody.getJob());
         });
     }
 
@@ -53,17 +50,17 @@ public class ChangesWithUserTest extends BaseTest {
 
         ResponseCreateBody responseBody = step("make request", () ->
                 given()
-                .spec(changesUserBodyRequestSpec)
-                .body(requestBody)
-                .when()
-                .post("/users")
-                .then()
-                .spec(changesUserResponse201Spec)
-                .extract().as(ResponseCreateBody.class));
+                        .spec(changesUserBodyRequestSpec)
+                        .body(requestBody)
+                        .when()
+                        .post("/users")
+                        .then()
+                        .spec(changesUserResponse201Spec)
+                        .extract().as(ResponseCreateBody.class));
 
         step("check response", () -> {
-        Assertions.assertEquals("", responseBody.getName());
-        Assertions.assertEquals("", responseBody.getJob());
+            Assertions.assertEquals("", responseBody.getName());
+            Assertions.assertEquals("", responseBody.getJob());
         });
     }
 
@@ -77,17 +74,17 @@ public class ChangesWithUserTest extends BaseTest {
 
         ResponseUpdateBody responseBody = step("make request", () ->
                 given()
-                .spec(changesUserBodyRequestSpec)
-                .body(requestBody)
-                .when()
-                .put("/users/2")
-                .then()
-                .spec(changesUserResponse200Spec)
-                .extract().as(ResponseUpdateBody.class));
+                        .spec(changesUserBodyRequestSpec)
+                        .body(requestBody)
+                        .when()
+                        .put("/users/2")
+                        .then()
+                        .spec(changesUserResponse200Spec)
+                        .extract().as(ResponseUpdateBody.class));
 
         step("check response", () -> {
-        Assertions.assertEquals("morpheus", responseBody.getName());
-        Assertions.assertEquals("zion resident", responseBody.getJob());
+            Assertions.assertEquals("morpheus", responseBody.getName());
+            Assertions.assertEquals("zion resident", responseBody.getJob());
         });
     }
 
@@ -96,12 +93,12 @@ public class ChangesWithUserTest extends BaseTest {
     void deleteUserTest() {
 
         step("make request and check status code", () -> {
-        given()
-                .spec(changesUserNoBodyRequestSpec)
-                .when()
-                .delete("/users/2")
-                .then()
-                .spec(changesUserResponse204Spec);
+            given()
+                    .spec(changesUserNoBodyRequestSpec)
+                    .when()
+                    .delete("/users/2")
+                    .then()
+                    .spec(changesUserResponse204Spec);
         });
     }
 }

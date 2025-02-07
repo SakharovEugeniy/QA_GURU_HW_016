@@ -13,8 +13,8 @@ import static specs.SingleUserSpec.*;
 @Tag("api_test")
 public class SingleUserTest extends BaseTest {
 
-    @Test
     @Tag("smoke_test")
+    @Test
     @DisplayName("Проверка пользователя с id = 2")
     void statusCode200Test() {
 
