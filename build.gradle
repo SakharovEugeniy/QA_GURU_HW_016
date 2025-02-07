@@ -32,13 +32,26 @@ dependencies {
     )
 }
 
-tasks.withType(Test) {
     useJUnitPlatform()
+    systemProperties(System.getProperties())
+    systemProperty 'file.encoding', 'UTF-8'
 
     testLogging {
         lifecycle {
             events "started", "skipped", "failed", "standard_error", "standard_out"
             exceptionFormat "short"
         }
+    }
+}
+
+task smoke_test(type: Test) {
+    useJUnitPlatform {
+        includeTags("smoke_test")
+    }
+}
+
+task api_test(type: Test) {
+    useJUnitPlatform {
+        includeTags("api_test")
     }
 }

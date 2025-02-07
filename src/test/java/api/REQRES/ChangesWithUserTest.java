@@ -6,39 +6,42 @@ import models.changesWithUser.ResponseCreateBody;
 import models.changesWithUser.ResponseUpdateBody;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static helpers.CustomAllureListener.withCustomTemplates;
+import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
+import static specs.ChangesWithUserSpec.*;
 
+
+@Tag("api_test")
 public class ChangesWithUserTest extends BaseTest {
 
     RequestChangesBody requestBody = new RequestChangesBody();
 
     @Test
+    @Tag("smoke_test")
     @DisplayName("Проверка создания пользователя")
     void createUserTest() {
         requestBody.setName("morpheus");
         requestBody.setJob("leader");
 
-        ResponseCreateBody responseBody = given()
-                .filter(withCustomTemplates())
+        ResponseCreateBody responseBody = step("make request", () ->
+                given()
+                .spec(changesUserBodyRequestSpec)
                 .body(requestBody)
-                .contentType(JSON)
-                .log().uri()
-                .log().headers()
-                .log().body()
                 .when()
                 .post("/users")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(201)
-                .extract().as(ResponseCreateBody.class);
+                .spec(changesUserResponse201Spec)
+                .extract().as(ResponseCreateBody.class));
 
+        step("check response", () -> {
         Assertions.assertEquals("morpheus", responseBody.getName());
         Assertions.assertEquals("leader", responseBody.getJob());
+        });
     }
 
 
@@ -48,23 +51,20 @@ public class ChangesWithUserTest extends BaseTest {
         requestBody.setName("");
         requestBody.setJob("");
 
-        ResponseCreateBody responseBody = given()
-                .filter(withCustomTemplates())
+        ResponseCreateBody responseBody = step("make request", () ->
+                given()
+                .spec(changesUserBodyRequestSpec)
                 .body(requestBody)
-                .contentType(JSON)
-                .log().uri()
-                .log().headers()
-                .log().body()
                 .when()
                 .post("/users")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(201)
-                .extract().as(ResponseCreateBody.class);
+                .spec(changesUserResponse201Spec)
+                .extract().as(ResponseCreateBody.class));
 
+        step("check response", () -> {
         Assertions.assertEquals("", responseBody.getName());
         Assertions.assertEquals("", responseBody.getJob());
+        });
     }
 
 
@@ -75,38 +75,33 @@ public class ChangesWithUserTest extends BaseTest {
         requestBody.setName("morpheus");
         requestBody.setJob("zion resident");
 
-        ResponseUpdateBody responseBody = given()
-                .filter(withCustomTemplates())
+        ResponseUpdateBody responseBody = step("make request", () ->
+                given()
+                .spec(changesUserBodyRequestSpec)
                 .body(requestBody)
-                .contentType(JSON)
-                .log().uri()
-                .log().headers()
-                .log().body()
                 .when()
                 .put("/users/2")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
-                .extract().as(ResponseUpdateBody.class);
+                .spec(changesUserResponse200Spec)
+                .extract().as(ResponseUpdateBody.class));
 
+        step("check response", () -> {
         Assertions.assertEquals("morpheus", responseBody.getName());
         Assertions.assertEquals("zion resident", responseBody.getJob());
+        });
     }
 
     @Test
     @DisplayName("Проверка удаления существующего пользователя")
     void deleteUserTest() {
+
+        step("make request and check status code", () -> {
         given()
-                .filter(withCustomTemplates())
-                .contentType(JSON)
-                .log().uri()
-                .log().headers()
+                .spec(changesUserNoBodyRequestSpec)
                 .when()
                 .delete("/users/2")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(204);
+                .spec(changesUserResponse204Spec);
+        });
     }
 }
