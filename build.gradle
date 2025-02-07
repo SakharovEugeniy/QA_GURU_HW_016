@@ -8,6 +8,10 @@ repositories {
     mavenCentral()
 }
 
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
 allure {
     report {
         version.set("2.21.0")
