@@ -15,6 +15,7 @@ public class SingleUserSpec {
     public static RequestSpecification singleUserRequestSpec = with()
             .filter(withCustomTemplates())
             .contentType(JSON)
+            .header("x-api-key", "reqres-free-v1")
             .log().uri()
             .log().headers();
 

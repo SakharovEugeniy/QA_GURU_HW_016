@@ -15,6 +15,7 @@ public class ChangesWithUserSpec {
     public static RequestSpecification changesUserBodyRequestSpec = with()
             .filter(withCustomTemplates())
             .contentType(JSON)
+            .header("x-api-key", "reqres-free-v1")
             .log().uri()
             .log().headers()
             .log().body();
@@ -23,6 +24,7 @@ public class ChangesWithUserSpec {
     public static RequestSpecification changesUserNoBodyRequestSpec = with()
             .filter(withCustomTemplates())
             .contentType(JSON)
+            .header("x-api-key", "reqres-free-v1")
             .log().uri()
             .log().headers();
 
